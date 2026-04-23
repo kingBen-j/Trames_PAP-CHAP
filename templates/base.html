@@ -181,7 +181,9 @@
             </a>
         </nav>
         <div class="px-4 mt-auto">
-            <button id="btn-handshake" onclick="window.location.href='{% url 'simulator:home' %}?autorun=full'" class="w-full py-3 bg-transparent border border-emerald-400 text-emerald-400 font-bold font-label-caps text-xs tracking-widest hover:bg-emerald-400/10 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all active:scale-95">
+        
+            {% url 'simulator:home' as home_url %}
+            <button id="btn-handshake" onclick="window.location.href='{{ home_url }}?autorun=full'" class="w-full py-3 bg-transparent border border-emerald-400 text-emerald-400 font-bold font-label-caps text-xs tracking-widest hover:bg-emerald-400/10 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all active:scale-95">
                 <span class="material-symbols-outlined text-sm align-middle mr-1">handshake</span>
                 INITIATE HANDSHAKE
             </button>
