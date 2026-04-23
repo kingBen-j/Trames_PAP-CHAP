@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-change-me"
 DEBUG = True
 ALLOWED_HOSTS = [
-    'mon-portfolio-ten-iota.vercel.app',
+    '.vercel.app',
     'localhost',
     '127.0.0.1',
 ]
