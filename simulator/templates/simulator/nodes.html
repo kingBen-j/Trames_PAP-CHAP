@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Nodes // VORTEX_NET_SIM{% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="mb-12 relative">
+    <h1 class="font-headline-xl text-primary drop-shadow-[0_0_15px_rgba(0,210,229,0.3)] mb-2 uppercase">Nodes</h1>
+    <p class="text-secondary font-body-lg max-w-2xl">
+        Carte topologique du réseau simulé. Visualisation des nœuds, de leur état de connexion et des protocoles actifs.
+    </p>
+    <div class="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[200px] text-primary" style="font-variation-settings: 'FILL' 1;">hub</span>
+    </div>
+</div>
+
+<!-- Network Topology -->
+<div class="glass-card p-8 mb-12 min-h-[400px] relative overflow-hidden">
+    <div class="text-[10px] text-neutral-500 font-label-caps mb-8">NETWORK_TOPOLOGY // VORTEX_MESH</div>
+
+    <!-- SVG Topology Map -->
+    <div class="flex items-center justify-center">
+        <svg viewBox="0 0 800 300" class="w-full max-w-4xl" style="height: 300px;">
+            <!-- Connection Lines -->
+            <line x1="150" y1="150" x2="400" y2="80" stroke="#00f5ff" stroke-width="1" stroke-dasharray="5 5" opacity="0.4">
+                <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+            </line>
+            <line x1="150" y1="150" x2="400" y2="220" stroke="#10b981" stroke-width="1" stroke-dasharray="5 5" opacity="0.4">
+                <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1.2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="400" y1="80" x2="650" y2="150" stroke="#00f5ff" stroke-width="1" stroke-dasharray="5 5" opacity="0.4">
+                <animate attributeName="stroke-dashoffset" from="0" to="10" dur="0.8s" repeatCount="indefinite"/>
+            </line>
+            <line x1="400" y1="220" x2="650" y2="150" stroke="#10b981" stroke-width="1" stroke-dasharray="5 5" opacity="0.4">
+                <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1.1s" repeatCount="indefinite"/>
+            </line>
+
+            <!-- Client Node -->
+            <circle cx="150" cy="150" r="35" fill="rgba(0,245,255,0.1)" stroke="#00f5ff" stroke-width="1.5"/>
+            <circle cx="150" cy="150" r="25" fill="rgba(0,245,255,0.05)" stroke="#00f5ff" stroke-width="0.5"/>
+            <text x="150" y="145" text-anchor="middle" fill="#00f5ff" font-size="10" font-weight="bold">CLIENT</text>
+            <text x="150" y="160" text-anchor="middle" fill="#849495" font-size="8">192.168.1.10</text>
+
+            <!-- Switch Node -->
+            <rect x="370" y="55" width="60" height="50" rx="4" fill="rgba(148,211,193,0.1)" stroke="#94d3c1" stroke-width="1"/>
+            <text x="400" y="77" text-anchor="middle" fill="#94d3c1" font-size="9" font-weight="bold">SWITCH</text>
+            <text x="400" y="90" text-anchor="middle" fill="#849495" font-size="7">L2-BRIDGE</text>
+
+            <!-- Router Node -->
+            <rect x="370" y="195" width="60" height="50" rx="4" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1"/>
+            <text x="400" y="217" text-anchor="middle" fill="#10b981" font-size="9" font-weight="bold">ROUTER</text>
+            <text x="400" y="230" text-anchor="middle" fill="#849495" font-size="7">PPP-GW</text>
+
+            <!-- Server Node -->
+            <circle cx="650" cy="150" r="35" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
+            <circle cx="650" cy="150" r="25" fill="rgba(16,185,129,0.05)" stroke="#10b981" stroke-width="0.5"/>
+            <text x="650" y="145" text-anchor="middle" fill="#10b981" font-size="10" font-weight="bold">SERVER</text>
+            <text x="650" y="160" text-anchor="middle" fill="#849495" font-size="8">10.0.0.1</text>
+
+            <!-- Pulse animations -->
+            <circle cx="150" cy="150" r="35" fill="none" stroke="#00f5ff" stroke-width="0.5" opacity="0">
+                <animate attributeName="r" from="35" to="55" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="650" cy="150" r="35" fill="none" stroke="#10b981" stroke-width="0.5" opacity="0">
+                <animate attributeName="r" from="35" to="55" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+            </circle>
+        </svg>
+    </div>
+</div>
+
+<!-- Node Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+    <!-- Client Node Detail -->
+    <div class="glass-card p-5 border-t-2 border-cyan-400 hover:shadow-[0_0_20px_rgba(0,245,255,0.1)] transition-all">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-cyan-400">computer</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">CLIENT_HOST</h4>
+        <div class="text-[10px] text-neutral-500 font-mono mb-3">192.168.1.10</div>
+        <div class="space-y-2 text-[10px] text-on-surface-variant">
+            <div class="flex justify-between">
+                <span>Interface</span>
+                <span class="text-cyan-400 font-mono">eth0</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Protocole</span>
+                <span class="text-cyan-400 font-mono">PPP/PAP</span>
+            </div>
+            <div class="flex justify-between">
+                <span>État</span>
+                <span class="text-emerald-400">CONNECTED</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Uptime</span>
+                <span class="font-mono">02h 15m 33s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Switch Detail -->
+    <div class="glass-card p-5 border-t-2 border-secondary hover:shadow-[0_0_20px_rgba(148,211,193,0.1)] transition-all">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-secondary">device_hub</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">L2_SWITCH</h4>
+        <div class="text-[10px] text-neutral-500 font-mono mb-3">BRIDGE_MODE</div>
+        <div class="space-y-2 text-[10px] text-on-surface-variant">
+            <div class="flex justify-between">
+                <span>Ports actifs</span>
+                <span class="text-secondary font-mono">4 / 24</span>
+            </div>
+            <div class="flex justify-between">
+                <span>VLAN</span>
+                <span class="text-secondary font-mono">VLAN 10</span>
+            </div>
+            <div class="flex justify-between">
+                <span>STP</span>
+                <span class="text-emerald-400">FORWARDING</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Throughput</span>
+                <span class="font-mono">1 Gbps</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Router Detail -->
+    <div class="glass-card p-5 border-t-2 border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-emerald-400">router</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">PPP_ROUTER</h4>
+        <div class="text-[10px] text-neutral-500 font-mono mb-3">GATEWAY</div>
+        <div class="space-y-2 text-[10px] text-on-surface-variant">
+            <div class="flex justify-between">
+                <span>Interface WAN</span>
+                <span class="text-emerald-400 font-mono">Serial0/0</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Encapsulation</span>
+                <span class="text-emerald-400 font-mono">PPP</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Auth active</span>
+                <span class="text-emerald-400">CHAP</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Routes</span>
+                <span class="font-mono">12 entrées</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Detail -->
+    <div class="glass-card p-5 border-t-2 border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
+        <div class="flex items-center justify-between mb-4">
+            <span class="material-symbols-outlined text-emerald-400">dns</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span>
+        </div>
+        <h4 class="text-sm font-bold text-on-surface mb-1">AUTH_SERVER</h4>
+        <div class="text-[10px] text-neutral-500 font-mono mb-3">10.0.0.1</div>
+        <div class="space-y-2 text-[10px] text-on-surface-variant">
+            <div class="flex justify-between">
+                <span>Service</span>
+                <span class="text-emerald-400 font-mono">pppd</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Auth supportées</span>
+                <span class="text-emerald-400 font-mono">PAP, CHAP</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Sessions</span>
+                <span class="text-emerald-400">3 actives</span>
+            </div>
+            <div class="flex justify-between">
+                <span>CPU</span>
+                <span class="font-mono">12%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Network Stats -->
+<div class="glass-card p-6">
+    <h4 class="font-headline-md text-primary mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined">monitoring</span>
+        Métriques Réseau
+    </h4>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+        <div>
+            <div class="text-3xl font-bold text-cyan-400">4</div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mt-1">NŒUDS ACTIFS</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-emerald-400">100%</div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mt-1">DISPONIBILITÉ</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-secondary">12ms</div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mt-1">LATENCE</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-primary-fixed-dim">0</div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mt-1">ERREURS</div>
+        </div>
+        <div>
+            <div class="text-3xl font-bold text-secondary">1.2k</div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mt-1">PAQUETS/MIN</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

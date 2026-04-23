@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+
+{% block title %}Simulator // VORTEX_NET_SIM{% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="mb-12 relative">
+    <h1 class="font-headline-xl text-primary drop-shadow-[0_0_15px_rgba(0,210,229,0.3)] mb-2 uppercase">Protocol Lab</h1>
+    <p class="text-secondary font-body-lg max-w-2xl">
+        Simulation interactive des protocoles d'authentification PAP (Password Authentication Protocol) et CHAP (Challenge Handshake Authentication Protocol).
+    </p>
+    <div class="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[200px] text-primary" style="font-variation-settings: 'FILL' 1;">vm_group</span>
+    </div>
+</div>
+
+<!-- Simulation Controls -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+    <div class="glass-card p-6 border-l-4 border-cyan-400 hover:shadow-[0_0_30px_rgba(0,245,255,0.1)] transition-all">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-label-caps text-cyan-400">MODE: PAP</span>
+            <span class="text-[10px] text-neutral-500 font-mono">0x41 0x55 0x54 0x48</span>
+        </div>
+        <h3 class="font-headline-md text-on-surface mb-3">Password Authentication Protocol</h3>
+        <p class="text-body-md text-on-surface-variant mb-6">
+            Authentification bidirectionnelle simple. Le client envoie son identifiant et son mot de passe en <strong class="text-cyan-300">clair</strong>.
+        </p>
+        <button id="btn-sim-pap" class="px-6 py-3 border border-cyan-400 text-cyan-400 font-label-caps hover:bg-cyan-400/10 flex items-center gap-2 group" onclick="runSimulation('pap')">
+            <span class="material-symbols-outlined group-hover:rotate-180 transition-transform">play_arrow</span>
+            LANCER SIMULATION PAP
+        </button>
+    </div>
+
+    <div class="glass-card p-6 border-l-4 border-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-label-caps text-emerald-400">MODE: CHAP</span>
+            <span class="text-[10px] text-neutral-500 font-mono">0x48 0x41 0x53 0x48</span>
+        </div>
+        <h3 class="font-headline-md text-on-surface mb-3">Challenge Handshake Protocol</h3>
+        <p class="text-body-md text-on-surface-variant mb-6">
+            Méthode sécurisée par <strong class="text-emerald-300">Challenge/Response</strong>. Le mot de passe n'est jamais transmis sur le réseau.
+        </p>
+        <button id="btn-sim-chap" class="px-6 py-3 border border-emerald-400 text-emerald-400 font-label-caps hover:bg-emerald-400/10 flex items-center gap-2 group" onclick="runSimulation('chap')">
+            <span class="material-symbols-outlined group-hover:rotate-180 transition-transform">security</span>
+            LANCER SIMULATION CHAP
+        </button>
+    </div>
+</div>
+
+<!-- Terminal Simulation Area -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch h-[600px]">
+    <!-- Client Terminal -->
+    <div class="lg:col-span-4 glass-card overflow-hidden flex flex-col border-cyan-900/30">
+        <div class="bg-neutral-900 px-4 py-2 flex items-center justify-between border-b border-neutral-800">
+            <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-error/40"></div>
+                <div class="w-3 h-3 rounded-full bg-secondary/40"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-400/40"></div>
+            </div>
+            <span class="text-[10px] font-mono text-cyan-400">CLIENT_HOST: 192.168.1.10</span>
+        </div>
+        <div id="client-terminal" class="p-4 font-mono text-xs text-on-surface-variant flex-1 space-y-2 overflow-y-auto">
+            <div class="text-cyan-400/50"># Initializing ppp session...</div>
+            <div class="text-on-surface">system: interface eth0 up</div>
+            <div class="text-on-surface">auth: seeking authentication via PAP...</div>
+            <div class="flex gap-2">
+                <span class="text-cyan-400">&gt;&gt;</span>
+                <span class="bg-cyan-500/10 px-1 border border-cyan-500/20">SEND: user="dany" pass="qwerty123"</span>
+            </div>
+            <div class="animate-pulse">_</div>
+        </div>
+    </div>
+
+    <!-- Central Packet Flow -->
+    <div class="lg:col-span-4 flex flex-col items-center justify-center relative px-4">
+        <div class="kinetic-line w-full mb-12 relative">
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-label-caps text-cyan-400">DATA_BURST</div>
+        </div>
+        <div id="packet-display" class="space-y-6 w-full">
+            <div class="glass-card p-3 border-dashed border-cyan-400/50 flex flex-col items-center">
+                <div class="text-[9px] text-neutral-500 mb-1">HEADER: 0xFF 0x03 0xC0 0x23</div>
+                <div class="w-full h-8 bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center overflow-hidden">
+                    <span class="text-[10px] font-mono text-cyan-200">AUTH_REQ: PASS=qwerty123</span>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <span class="material-symbols-outlined text-cyan-400 text-4xl animate-bounce">arrow_forward</span>
+            </div>
+            <div class="glass-card p-3 border-dashed border-emerald-400/50 flex flex-col items-center">
+                <div class="text-[9px] text-neutral-500 mb-1">CHALLENGE: 0x82_VAL_9921</div>
+                <div class="w-full h-8 bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center overflow-hidden">
+                    <span class="text-[10px] font-mono text-emerald-200">HASH: a8b3c4...</span>
+                </div>
+            </div>
+        </div>
+        <div class="kinetic-line w-full mt-12 relative">
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-label-caps text-emerald-400">ENCRYPTED_HANDSHAKE</div>
+        </div>
+    </div>
+
+    <!-- Server Terminal -->
+    <div class="lg:col-span-4 glass-card overflow-hidden flex flex-col border-emerald-900/30">
+        <div class="bg-neutral-900 px-4 py-2 flex items-center justify-between border-b border-neutral-800">
+            <span class="text-[10px] font-mono text-emerald-400">SERVER_GATEWAY: 10.0.0.1</span>
+            <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-emerald-400/40"></div>
+                <div class="w-3 h-3 rounded-full bg-secondary/40"></div>
+                <div class="w-3 h-3 rounded-full bg-error/40"></div>
+            </div>
+        </div>
+        <div id="server-terminal" class="p-4 font-mono text-xs text-on-surface-variant flex-1 space-y-2 overflow-y-auto">
+            <div class="text-emerald-400/50"># Listening on pppd daemon...</div>
+            <div class="text-on-surface">rcvd [PAP AuthReq id=1 user="dany" password="***"]</div>
+            <div class="text-error">warning: insecure authentication detected</div>
+            <div class="text-emerald-400">Remote message: Welcome back, Dany.</div>
+            <div class="text-emerald-400">LCP: up</div>
+            <div class="animate-pulse">_</div>
+        </div>
+    </div>
+</div>
+
+<!-- Knowledge Base -->
+<div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="glass-card p-6 md:col-span-2">
+        <h4 class="font-headline-md text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined">description</span>
+            Analyse du Fonctionnement
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+                <h5 class="text-cyan-400 font-label-caps mb-2">Mécanique PAP</h5>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                    Le protocole PAP utilise un handshake en deux étapes. Le mot de passe est envoyé de manière répétée jusqu'à ce que l'authentification soit reconnue ou que la connexion soit interrompue.
+                    <strong>Risque :</strong> vulnérable aux attaques par sniffing.
+                </p>
+            </div>
+            <div>
+                <h5 class="text-emerald-400 font-label-caps mb-2">Mécanique CHAP</h5>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                    CHAP introduit un nonce (challenge unique). Le client combine son mot de passe avec ce nonce via une fonction de hachage (MD5). Le serveur fait de même.
+                    Si les hashs correspondent, l'accès est accordé. <strong>Avantage :</strong> protection contre le rejeu.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card p-6 flex flex-col justify-between">
+        <div>
+            <div class="text-[10px] text-neutral-500 font-label-caps mb-4">SECURITY_STANCE</div>
+            <div class="flex items-end justify-between mb-2">
+                <span class="text-xs">Traffic Encryption</span>
+                <span class="text-emerald-400 font-bold">94%</span>
+            </div>
+            <div class="w-full bg-neutral-900 h-1.5 rounded-full overflow-hidden mb-6">
+                <div class="bg-emerald-400 h-full w-[94%] shadow-[0_0_8px_#10b981]"></div>
+            </div>
+            <div class="flex items-end justify-between mb-2">
+                <span class="text-xs">Vulnerability Exposure</span>
+                <span class="text-error font-bold">LOW</span>
+            </div>
+            <div class="w-full bg-neutral-900 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-error h-full w-[15%]"></div>
+            </div>
+        </div>
+        <div class="mt-8 pt-6 border-t border-neutral-800">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+                    <span class="material-symbols-outlined text-emerald-400">person</span>
+                </div>
+                <div>
+                    <div class="text-xs font-bold">Dany Captione</div>
+                    <div class="text-[10px] text-neutral-500 uppercase">Network Architect</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-20 flex justify-center opacity-40">
+    <svg class="animate-spin-slow" width="200" height="200" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#00f5ff" stroke-width="0.5" stroke-dasharray="2 10"></circle>
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#10b981" stroke-width="0.5" stroke-dasharray="10 2"></circle>
+        <circle cx="50" cy="50" r="20" fill="none" stroke="#00f5ff" stroke-width="1" stroke-dasharray="1 1"></circle>
+    </svg>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let simRunning = false;
+
+function updatePacketDisplay(headerText, payloadText, color) {
+    const pd = document.getElementById('packet-display');
+    if (!pd) return;
+    const borderC = color === 'cyan' ? 'border-cyan-400/50' : 'border-emerald-400/50';
+    const bgC = color === 'cyan' ? 'bg-cyan-400/10' : 'bg-emerald-400/10';
+    const brdC = color === 'cyan' ? 'border-cyan-400/20' : 'border-emerald-400/20';
+    const txtC = color === 'cyan' ? 'text-cyan-200' : 'text-emerald-200';
+    pd.innerHTML = `
+        <div class="glass-card p-3 border-dashed ${borderC} flex flex-col items-center transition-all">
+            <div class="text-[9px] text-neutral-500 mb-1">${headerText}</div>
+            <div class="w-full h-8 ${bgC} border ${brdC} flex items-center justify-center overflow-hidden">
+                <span class="text-[10px] font-mono ${txtC}">${payloadText}</span>
+            </div>
+        </div>`;
+}
+
+function addLine(terminal, text, cls, isHex) {
+    const line = document.createElement('div');
+    line.className = cls + (isHex ? ' bg-neutral-900/60 px-2 py-0.5 border-l-2 border-neutral-700 text-[10px]' : '');
+    line.textContent = text;
+    line.style.opacity = '0';
+    line.style.transform = 'translateY(4px)';
+    line.style.transition = 'all 0.25s ease';
+    terminal.appendChild(line);
+    requestAnimationFrame(() => { line.style.opacity = '1'; line.style.transform = 'translateY(0)'; });
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+function addCursor(terminal) {
+    const c = document.createElement('div');
+    c.className = 'animate-pulse text-emerald-400';
+    c.textContent = '█';
+    c.id = 'cursor-' + Math.random();
+    terminal.appendChild(c);
+    terminal.scrollTop = terminal.scrollHeight;
+    return c;
+}
+
+function removeCursors(terminal) {
+    terminal.querySelectorAll('[id^="cursor-"]').forEach(c => c.remove());
+}
+
+function runSimulation(type) {
+    if (simRunning) return;
+    simRunning = true;
+    const ct = document.getElementById('client-terminal');
+    const st = document.getElementById('server-terminal');
+    ct.innerHTML = '';
+    st.innerHTML = '';
+
+    const steps = type === 'pap' ? getPapSteps() : getChapSteps();
+    let i = 0;
+    function next() {
+        if (i >= steps.length) { simRunning = false; addCursor(ct); addCursor(st); return; }
+        const s = steps[i]; i++;
+        removeCursors(s.target === 'client' ? ct : st);
+        const t = s.target === 'client' ? ct : st;
+        addLine(t, s.text, s.cls, s.hex || false);
+        if (s.packet) updatePacketDisplay(s.packet.header, s.packet.payload, s.packet.color);
+        setTimeout(next, s.wait || 400);
+    }
+    next();
+}
+
+function getPapSteps() {
+    const C = 'client', S = 'server';
+    return [
+        // Phase 1: LCP Negotiation
+        {target:C, text:'─── Phase 1: Négociation LCP ───', cls:'text-cyan-400 font-bold', wait:600},
+        {target:C, text:'pppd[1234]: pppd 2.4.9 started, interface ppp0', cls:'text-on-surface', wait:400},
+        {target:C, text:'pppd[1234]: using channel 1', cls:'text-on-surface', wait:300},
+        {target:C, text:'>> sent [LCP ConfReq id=0x1 <mru 1500> <auth pap> <magic 0x4e2c8a>]', cls:'text-cyan-400', wait:500,
+         packet:{header:'LCP Configure-Request (0xC021)', payload:'MRU=1500 AUTH=PAP MAGIC=0x4e2c8a', color:'cyan'}},
+        {target:C, text:'   ff 03 c0 21 01 01 00 12 01 04 05 dc 03 04 c0 23 05 06 00 4e 2c 8a', cls:'text-neutral-500', hex:true, wait:400},
+        {target:S, text:'pppd[5678]: connection from 192.168.1.10', cls:'text-on-surface', wait:400},
+        {target:S, text:'<< rcvd [LCP ConfReq id=0x1 <mru 1500> <auth pap> <magic 0x4e2c8a>]', cls:'text-emerald-400', wait:400},
+        {target:S, text:'>> sent [LCP ConfAck id=0x1 <mru 1500> <auth pap> <magic 0x4e2c8a>]', cls:'text-emerald-400', wait:500,
+         packet:{header:'LCP Configure-Ack (0xC021)', payload:'ACK: MRU=1500 AUTH=PAP', color:'emerald'}},
+        {target:S, text:'   ff 03 c0 21 02 01 00 12 01 04 05 dc 03 04 c0 23 05 06 00 4e 2c 8a', cls:'text-neutral-500', hex:true, wait:400},
+        {target:C, text:'<< rcvd [LCP ConfAck id=0x1]', cls:'text-emerald-400', wait:300},
+        {target:C, text:'LCP: state = OPENED', cls:'text-emerald-400 font-bold', wait:600},
+        {target:S, text:'LCP: state = OPENED', cls:'text-emerald-400 font-bold', wait:400},
+
+        // Phase 2: PAP Authentication
+        {target:C, text:'', cls:'', wait:200},
+        {target:C, text:'─── Phase 2: Authentification PAP ───', cls:'text-cyan-400 font-bold', wait:600},
+        {target:C, text:'auth: méthode PAP sélectionnée par le serveur', cls:'text-on-surface', wait:400},
+        {target:C, text:'>> sent [PAP AuthReq id=0x1 user="dany" password="qwerty123"]', cls:'text-cyan-400', wait:500,
+         packet:{header:'PAP Auth-Request (0xC023 Code=1)', payload:'USER=dany PASS=qwerty123 [CLAIR!]', color:'cyan'}},
+        {target:C, text:'   ff 03 c0 23 01 01 00 1c 04 64 61 6e 79 0a 71 77 65 72 74 79 31 32 33', cls:'text-neutral-500', hex:true, wait:400},
+        {target:C, text:'⚠ DANGER: mot de passe envoyé EN CLAIR sur le réseau!', cls:'text-error font-bold', wait:500},
+        {target:S, text:'<< rcvd [PAP AuthReq id=0x1 user="dany" password="qwerty123"]', cls:'text-on-surface', wait:400},
+        {target:S, text:'⚠ ALERTE SÉCURITÉ: mot de passe visible: "qwerty123"', cls:'text-error font-bold', wait:500},
+        {target:S, text:'auth: vérification dans /etc/ppp/pap-secrets...', cls:'text-on-surface', wait:600},
+        {target:S, text:'auth: utilisateur "dany" trouvé, mot de passe VALIDE ✓', cls:'text-emerald-400', wait:400},
+        {target:S, text:'>> sent [PAP AuthAck id=0x1 "Bienvenue, Dany."]', cls:'text-emerald-400', wait:500,
+         packet:{header:'PAP Auth-Ack (0xC023 Code=2)', payload:'STATUS=SUCCESS MSG="Bienvenue"', color:'emerald'}},
+        {target:S, text:'   ff 03 c0 23 02 01 00 12 00 42 69 65 6e 76 65 6e 75 65', cls:'text-neutral-500', hex:true, wait:400},
+        {target:C, text:'<< rcvd [PAP AuthAck id=0x1 "Bienvenue, Dany."]', cls:'text-emerald-400', wait:400},
+
+        // Phase 3: NCP
+        {target:C, text:'', cls:'', wait:200},
+        {target:C, text:'─── Phase 3: Configuration NCP/IPCP ───', cls:'text-cyan-400 font-bold', wait:500},
+        {target:C, text:'IPCP: adresse IP locale = 192.168.1.10', cls:'text-emerald-400', wait:300},
+        {target:C, text:'IPCP: adresse IP distante = 10.0.0.1', cls:'text-emerald-400', wait:300},
+        {target:C, text:'✓ Session PPP établie avec succès (PAP)', cls:'text-emerald-400 font-bold', wait:300},
+        {target:S, text:'✓ Client "dany" authentifié et connecté', cls:'text-emerald-400 font-bold', wait:300},
+    ];
+}
+
+function getChapSteps() {
+    const C = 'client', S = 'server';
+    return [
+        // Phase 1: LCP
+        {target:C, text:'─── Phase 1: Négociation LCP ───', cls:'text-cyan-400 font-bold', wait:600},
+        {target:C, text:'pppd[1234]: pppd 2.4.9 started, interface ppp0', cls:'text-on-surface', wait:400},
+        {target:C, text:'>> sent [LCP ConfReq id=0x1 <mru 1500> <magic 0x7b3f1d>]', cls:'text-cyan-400', wait:500,
+         packet:{header:'LCP Configure-Request (0xC021)', payload:'MRU=1500 MAGIC=0x7b3f1d', color:'cyan'}},
+        {target:C, text:'   ff 03 c0 21 01 01 00 0e 01 04 05 dc 05 06 00 7b 3f 1d', cls:'text-neutral-500', hex:true, wait:400},
+        {target:S, text:'pppd[5678]: connection from 192.168.1.10', cls:'text-on-surface', wait:400},
+        {target:S, text:'>> sent [LCP ConfReq id=0x1 <auth chap MD5>]', cls:'text-emerald-400', wait:400},
+        {target:S, text:'   ff 03 c0 21 01 01 00 0a 03 05 c2 23 05', cls:'text-neutral-500', hex:true, wait:400},
+        {target:S, text:'Note: le SERVEUR impose CHAP (auth=0xC223)', cls:'text-emerald-400', wait:400},
+        {target:C, text:'<< rcvd [LCP ConfReq <auth chap MD5>]', cls:'text-emerald-400', wait:300},
+        {target:C, text:'LCP: state = OPENED', cls:'text-emerald-400 font-bold', wait:500},
+        {target:S, text:'LCP: state = OPENED', cls:'text-emerald-400 font-bold', wait:400},
+
+        // Phase 2: CHAP 3-way handshake
+        {target:S, text:'', cls:'', wait:200},
+        {target:S, text:'─── Phase 2: Authentification CHAP (3-Way) ───', cls:'text-emerald-400 font-bold', wait:600},
+
+        // Step 1: Challenge
+        {target:S, text:'[ÉTAPE 1/3] Génération du challenge aléatoire...', cls:'text-emerald-300', wait:500},
+        {target:S, text:'nonce = random(16 octets) = 0xa3 0x4f 0xb2 0x91 0xc8 ...', cls:'text-on-surface', wait:400},
+        {target:S, text:'>> sent [CHAP Challenge id=0x1 <16 bytes challenge> name="server"]', cls:'text-emerald-400', wait:500,
+         packet:{header:'CHAP Challenge (0xC223 Code=1)', payload:'NONCE=a34fb291c8... NAME=server', color:'emerald'}},
+        {target:S, text:'   ff 03 c2 23 01 01 00 1d 10 a3 4f b2 91 c8 7e 3d f6 04 5a 8b e2 73 19 d0 aa 73 65 72 76 65 72', cls:'text-neutral-500', hex:true, wait:400},
+        {target:C, text:'<< rcvd [CHAP Challenge id=0x1 name="server"]', cls:'text-on-surface', wait:400},
+        {target:C, text:'challenge reçu: a3 4f b2 91 c8 7e 3d f6 04 5a 8b e2 73 19 d0 aa', cls:'text-on-surface', wait:400},
+
+        // Step 2: Response
+        {target:C, text:'', cls:'', wait:200},
+        {target:C, text:'[ÉTAPE 2/3] Calcul du hash MD5...', cls:'text-cyan-300', wait:500},
+        {target:C, text:'hash = MD5(id=0x01 + "qwerty123" + challenge)', cls:'text-cyan-400', wait:400},
+        {target:C, text:'hash = MD5(01 71 77 65 72 74 79 31 32 33 a3 4f b2 91 c8...)', cls:'text-on-surface', wait:400},
+        {target:C, text:'résultat = 7d 2e 5f a1 b8 c3 09 44 e6 f7 12 3a 8b 4c d5 e9', cls:'text-cyan-400', wait:500},
+        {target:C, text:'🔒 Le mot de passe N\'EST PAS transmis, seul le hash!', cls:'text-emerald-400 font-bold', wait:400},
+        {target:C, text:'>> sent [CHAP Response id=0x1 <16 bytes hash> name="dany"]', cls:'text-cyan-400', wait:500,
+         packet:{header:'CHAP Response (0xC223 Code=2)', payload:'HASH=7d2e5fa1b8... NAME=dany', color:'cyan'}},
+        {target:C, text:'   ff 03 c2 23 02 01 00 1b 10 7d 2e 5f a1 b8 c3 09 44 e6 f7 12 3a 8b 4c d5 e9 64 61 6e 79', cls:'text-neutral-500', hex:true, wait:400},
+
+        // Step 3: Verification
+        {target:S, text:'<< rcvd [CHAP Response id=0x1 name="dany"]', cls:'text-on-surface', wait:400},
+        {target:S, text:'', cls:'', wait:200},
+        {target:S, text:'[ÉTAPE 3/3] Vérification côté serveur...', cls:'text-emerald-300', wait:500},
+        {target:S, text:'lookup: user="dany" dans /etc/ppp/chap-secrets', cls:'text-on-surface', wait:400},
+        {target:S, text:'calcul: expected = MD5(0x01 + stored_password + challenge)', cls:'text-on-surface', wait:400},
+        {target:S, text:'expected = 7d 2e 5f a1 b8 c3 09 44 e6 f7 12 3a 8b 4c d5 e9', cls:'text-on-surface', wait:400},
+        {target:S, text:'compare:  reçu    = 7d 2e 5f a1 b8 c3 09 44 e6 f7 12 3a 8b 4c d5 e9', cls:'text-on-surface', wait:300},
+        {target:S, text:'✓ HASH MATCH — Authentification réussie!', cls:'text-emerald-400 font-bold', wait:500},
+        {target:S, text:'>> sent [CHAP Success id=0x1 "Accès autorisé"]', cls:'text-emerald-400', wait:500,
+         packet:{header:'CHAP Success (0xC223 Code=3)', payload:'STATUS=SUCCESS ✓', color:'emerald'}},
+        {target:S, text:'   ff 03 c2 23 03 01 00 14 41 63 63 c3 a8 73 20 61 75 74 6f 72 69 73 c3 a9', cls:'text-neutral-500', hex:true, wait:400},
+        {target:C, text:'<< rcvd [CHAP Success id=0x1]', cls:'text-emerald-400', wait:400},
+
+        // Phase 3: NCP
+        {target:C, text:'', cls:'', wait:200},
+        {target:C, text:'─── Phase 3: Configuration NCP/IPCP ───', cls:'text-cyan-400 font-bold', wait:500},
+        {target:C, text:'IPCP: adresse IP locale = 192.168.1.10', cls:'text-emerald-400', wait:300},
+        {target:C, text:'✓ Session PPP établie avec succès (CHAP-MD5)', cls:'text-emerald-400 font-bold', wait:300},
+        {target:S, text:'✓ Client "dany" authentifié via CHAP (sécurisé)', cls:'text-emerald-400 font-bold', wait:300},
+    ];
+}
+
+// Auto-run on page load if ?autorun=full
+document.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    const autorun = params.get('autorun');
+    if (autorun === 'full') {
+        setTimeout(function() { runSimulation('pap'); }, 500);
+        setTimeout(function() { runSimulation('chap'); }, 12000);
+    }
+});
+</script>
+{% endblock %}

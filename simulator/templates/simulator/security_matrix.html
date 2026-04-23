@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Security Matrix // VORTEX_NET_SIM{% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="mb-12 relative">
+    <h1 class="font-headline-xl text-primary drop-shadow-[0_0_15px_rgba(0,210,229,0.3)] mb-2 uppercase">Security Matrix</h1>
+    <p class="text-secondary font-body-lg max-w-2xl">
+        Tableau comparatif de sécurité des protocoles d'authentification. Évaluation des vulnérabilités et recommandations.
+    </p>
+    <div class="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[200px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+    </div>
+</div>
+
+<!-- Comparaison PAP vs CHAP -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+    <!-- PAP Card -->
+    <div class="glass-card p-8 border-l-4 border-cyan-400 relative overflow-hidden">
+        <div class="absolute top-4 right-4 px-3 py-1 bg-error/10 border border-error/30 text-error text-[10px] font-label-caps">
+            RISQUE ÉLEVÉ
+        </div>
+        <div class="flex items-center gap-3 mb-6">
+            <span class="material-symbols-outlined text-cyan-400 text-3xl">lock_open</span>
+            <div>
+                <h3 class="font-headline-md text-on-surface">PAP</h3>
+                <div class="text-[10px] text-neutral-500 font-label-caps">Password Authentication Protocol</div>
+            </div>
+        </div>
+
+        <div class="space-y-4 mb-8">
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Confidentialité</span>
+                    <span class="text-error font-bold">15%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-error h-full w-[15%] shadow-[0_0_8px_rgba(255,180,171,0.5)]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Résistance au rejeu</span>
+                    <span class="text-error font-bold">0%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-error h-full w-[0%]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Résistance au sniffing</span>
+                    <span class="text-error font-bold">0%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-error h-full w-[0%]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Simplicité d'implémentation</span>
+                    <span class="text-emerald-400 font-bold">95%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-[95%] shadow-[0_0_8px_#10b981]"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <h5 class="text-error font-label-caps text-xs">Vulnérabilités connues</h5>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-error text-sm mt-0.5">close</span>
+                Mot de passe transmis en clair
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-error text-sm mt-0.5">close</span>
+                Vulnérable aux attaques man-in-the-middle
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-error text-sm mt-0.5">close</span>
+                Aucune protection contre le rejeu
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-error text-sm mt-0.5">close</span>
+                Ré-authentification non supportée
+            </div>
+        </div>
+    </div>
+
+    <!-- CHAP Card -->
+    <div class="glass-card p-8 border-l-4 border-emerald-400 relative overflow-hidden">
+        <div class="absolute top-4 right-4 px-3 py-1 bg-emerald-400/10 border border-emerald-400/30 text-emerald-400 text-[10px] font-label-caps">
+            SÉCURISÉ
+        </div>
+        <div class="flex items-center gap-3 mb-6">
+            <span class="material-symbols-outlined text-emerald-400 text-3xl">enhanced_encryption</span>
+            <div>
+                <h3 class="font-headline-md text-on-surface">CHAP</h3>
+                <div class="text-[10px] text-neutral-500 font-label-caps">Challenge Handshake Auth Protocol</div>
+            </div>
+        </div>
+
+        <div class="space-y-4 mb-8">
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Confidentialité</span>
+                    <span class="text-emerald-400 font-bold">92%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-[92%] shadow-[0_0_8px_#10b981]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Résistance au rejeu</span>
+                    <span class="text-emerald-400 font-bold">95%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-[95%] shadow-[0_0_8px_#10b981]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Résistance au sniffing</span>
+                    <span class="text-emerald-400 font-bold">88%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-[88%] shadow-[0_0_8px_#10b981]"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-on-surface-variant">Simplicité d'implémentation</span>
+                    <span class="text-secondary font-bold">60%</span>
+                </div>
+                <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden">
+                    <div class="bg-secondary h-full w-[60%]"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <h5 class="text-emerald-400 font-label-caps text-xs">Points forts</h5>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-emerald-400 text-sm mt-0.5">check</span>
+                Mot de passe jamais transmis sur le réseau
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-emerald-400 text-sm mt-0.5">check</span>
+                Challenge unique (nonce) à chaque session
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-emerald-400 text-sm mt-0.5">check</span>
+                Protection contre les attaques par rejeu
+            </div>
+            <div class="flex items-start gap-2 text-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-emerald-400 text-sm mt-0.5">check</span>
+                Ré-authentification périodique possible
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau comparatif -->
+<div class="glass-card p-6 mb-12">
+    <h4 class="font-headline-md text-primary mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined">compare_arrows</span>
+        Tableau Comparatif
+    </h4>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-neutral-800">
+                    <th class="text-left py-3 px-4 text-label-caps text-neutral-500">Critère</th>
+                    <th class="text-center py-3 px-4 text-label-caps text-cyan-400">PAP</th>
+                    <th class="text-center py-3 px-4 text-label-caps text-emerald-400">CHAP</th>
+                </tr>
+            </thead>
+            <tbody class="text-on-surface-variant">
+                <tr class="border-b border-neutral-800/50 hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Transmission du mot de passe</td>
+                    <td class="py-3 px-4 text-center text-error">En clair</td>
+                    <td class="py-3 px-4 text-center text-emerald-400">Hash uniquement</td>
+                </tr>
+                <tr class="border-b border-neutral-800/50 hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Mécanisme</td>
+                    <td class="py-3 px-4 text-center">2-way handshake</td>
+                    <td class="py-3 px-4 text-center">3-way handshake</td>
+                </tr>
+                <tr class="border-b border-neutral-800/50 hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Fonction de hachage</td>
+                    <td class="py-3 px-4 text-center text-neutral-600">Aucune</td>
+                    <td class="py-3 px-4 text-center">MD5</td>
+                </tr>
+                <tr class="border-b border-neutral-800/50 hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Utilisation d'un nonce</td>
+                    <td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-error text-sm">close</span></td>
+                    <td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-emerald-400 text-sm">check</span></td>
+                </tr>
+                <tr class="border-b border-neutral-800/50 hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Ré-authentification</td>
+                    <td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-error text-sm">close</span></td>
+                    <td class="py-3 px-4 text-center"><span class="material-symbols-outlined text-emerald-400 text-sm">check</span></td>
+                </tr>
+                <tr class="hover:bg-neutral-900/30 transition-colors">
+                    <td class="py-3 px-4">Initiateur d'authentification</td>
+                    <td class="py-3 px-4 text-center">Client (peer)</td>
+                    <td class="py-3 px-4 text-center">Serveur (authenticator)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recommandation -->
+<div class="glass-card p-6 border-l-4 border-emerald-400 pulse-glow">
+    <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-emerald-400 text-3xl">tips_and_updates</span>
+        <div>
+            <h4 class="font-headline-md text-emerald-400 mb-2">Recommandation</h4>
+            <p class="text-on-surface-variant text-sm leading-relaxed">
+                <strong class="text-on-surface">Privilégiez toujours CHAP</strong> pour les connexions PPP en production. PAP ne devrait être utilisé que dans des environnements de test isolés ou lorsque le canal de communication est déjà chiffré par une couche supérieure (ex: tunnel VPN/TLS).
+                Pour une sécurité maximale, considérez l'utilisation de <strong class="text-cyan-400">MS-CHAPv2</strong> ou <strong class="text-cyan-400">EAP-TLS</strong>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Traffic Logs // VORTEX_NET_SIM{% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="mb-12 relative">
+    <h1 class="font-headline-xl text-primary drop-shadow-[0_0_15px_rgba(0,210,229,0.3)] mb-2 uppercase">Traffic Logs</h1>
+    <p class="text-secondary font-body-lg max-w-2xl">
+        Surveillance en temps réel du trafic réseau. Analyse des trames capturées sur l'interface PPP.
+    </p>
+    <div class="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[200px] text-primary" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+    </div>
+</div>
+
+<!-- Filtres -->
+<div class="glass-card p-4 mb-8 flex flex-wrap gap-4 items-center">
+    <span class="text-label-caps text-cyan-400">FILTRES:</span>
+    <button class="px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-label-caps hover:bg-cyan-400/20 transition-all">TOUS</button>
+    <button class="px-4 py-2 border border-neutral-700 text-neutral-500 text-xs font-label-caps hover:bg-neutral-800 transition-all">PAP</button>
+    <button class="px-4 py-2 border border-neutral-700 text-neutral-500 text-xs font-label-caps hover:bg-neutral-800 transition-all">CHAP</button>
+    <button class="px-4 py-2 border border-neutral-700 text-neutral-500 text-xs font-label-caps hover:bg-neutral-800 transition-all">ERREURS</button>
+    <button class="px-4 py-2 border border-neutral-700 text-neutral-500 text-xs font-label-caps hover:bg-neutral-800 transition-all">LCP</button>
+</div>
+
+<!-- Log Entries -->
+<div class="space-y-3">
+    <!-- Log Entry 1 -->
+    <div class="glass-card p-4 border-l-4 border-cyan-400 hover:shadow-[0_0_20px_rgba(0,245,255,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-cyan-400 text-sm">arrow_upward</span>
+                <span class="text-[10px] font-mono text-cyan-400">00:00:01.234</span>
+                <span class="px-2 py-0.5 bg-cyan-400/10 text-cyan-300 text-[10px] font-label-caps">PAP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">192.168.1.10 → 10.0.0.1</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 1:</span> PPP LCP Configure-Request, MRU=1500, Auth=PAP
+        </div>
+        <div class="hidden group-hover:block mt-2 p-2 bg-neutral-900/50 text-[10px] font-mono text-neutral-400">
+            0000: ff 03 c0 21 01 01 00 12 01 04 05 dc 03 05 c0 23
+        </div>
+    </div>
+
+    <!-- Log Entry 2 -->
+    <div class="glass-card p-4 border-l-4 border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-emerald-400 text-sm">arrow_downward</span>
+                <span class="text-[10px] font-mono text-emerald-400">00:00:01.456</span>
+                <span class="px-2 py-0.5 bg-emerald-400/10 text-emerald-300 text-[10px] font-label-caps">LCP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">10.0.0.1 → 192.168.1.10</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 2:</span> PPP LCP Configure-Ack, MRU=1500, Auth=PAP
+        </div>
+        <div class="hidden group-hover:block mt-2 p-2 bg-neutral-900/50 text-[10px] font-mono text-neutral-400">
+            0000: ff 03 c0 21 02 01 00 12 01 04 05 dc 03 05 c0 23
+        </div>
+    </div>
+
+    <!-- Log Entry 3 -->
+    <div class="glass-card p-4 border-l-4 border-cyan-400 hover:shadow-[0_0_20px_rgba(0,245,255,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-cyan-400 text-sm">arrow_upward</span>
+                <span class="text-[10px] font-mono text-cyan-400">00:00:02.100</span>
+                <span class="px-2 py-0.5 bg-cyan-400/10 text-cyan-300 text-[10px] font-label-caps">PAP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">192.168.1.10 → 10.0.0.1</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 3:</span> PAP Authenticate-Request id=1 user="dany" password=***
+        </div>
+        <div class="hidden group-hover:block mt-2 p-2 bg-neutral-900/50 text-[10px] font-mono text-neutral-400">
+            0000: ff 03 c0 23 01 01 00 1a 04 64 61 6e 79 0a 71 77 65 72 74 79 31 32 33
+        </div>
+    </div>
+
+    <!-- Log Entry 4 - Error -->
+    <div class="glass-card p-4 border-l-4 border-error hover:shadow-[0_0_20px_rgba(255,180,171,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-error text-sm">warning</span>
+                <span class="text-[10px] font-mono text-error">00:00:02.105</span>
+                <span class="px-2 py-0.5 bg-error/10 text-error text-[10px] font-label-caps">ALERTE</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">SYSTÈME</span>
+        </div>
+        <div class="font-mono text-xs text-error/80">
+            <span class="text-neutral-500">Security:</span> Authentification PAP détectée — mot de passe transmis en clair sur le réseau
+        </div>
+    </div>
+
+    <!-- Log Entry 5 -->
+    <div class="glass-card p-4 border-l-4 border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-emerald-400 text-sm">arrow_downward</span>
+                <span class="text-[10px] font-mono text-emerald-400">00:00:02.890</span>
+                <span class="px-2 py-0.5 bg-emerald-400/10 text-emerald-300 text-[10px] font-label-caps">PAP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">10.0.0.1 → 192.168.1.10</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 4:</span> PAP Authenticate-Ack id=1 msg="Welcome back, Dany."
+        </div>
+    </div>
+
+    <!-- Log Entry 6 - CHAP -->
+    <div class="glass-card p-4 border-l-4 border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-emerald-400 text-sm">arrow_downward</span>
+                <span class="text-[10px] font-mono text-emerald-400">00:00:05.200</span>
+                <span class="px-2 py-0.5 bg-emerald-400/10 text-emerald-300 text-[10px] font-label-caps">CHAP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">10.0.0.1 → 192.168.1.10</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 5:</span> CHAP Challenge id=1 challenge=0x82_VAL_9921 name="server"
+        </div>
+        <div class="hidden group-hover:block mt-2 p-2 bg-neutral-900/50 text-[10px] font-mono text-neutral-400">
+            0000: ff 03 c2 23 01 01 00 20 10 82 56 41 4c 39 39 32 31 73 65 72 76 65 72
+        </div>
+    </div>
+
+    <!-- Log Entry 7 - CHAP Response -->
+    <div class="glass-card p-4 border-l-4 border-cyan-400 hover:shadow-[0_0_20px_rgba(0,245,255,0.08)] transition-all group">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-cyan-400 text-sm">arrow_upward</span>
+                <span class="text-[10px] font-mono text-cyan-400">00:00:05.780</span>
+                <span class="px-2 py-0.5 bg-cyan-400/10 text-cyan-300 text-[10px] font-label-caps">CHAP</span>
+            </div>
+            <span class="text-[10px] text-neutral-500 font-mono">192.168.1.10 → 10.0.0.1</span>
+        </div>
+        <div class="font-mono text-xs text-on-surface-variant">
+            <span class="text-neutral-500">Frame 6:</span> CHAP Response id=1 hash=a8b3c4d2e1f0... name="dany"
+        </div>
+    </div>
+</div>
+
+<!-- Stats résumé -->
+<div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="glass-card p-4 text-center">
+        <div class="text-2xl font-bold text-cyan-400">7</div>
+        <div class="text-[10px] text-neutral-500 font-label-caps mt-1">TOTAL FRAMES</div>
+    </div>
+    <div class="glass-card p-4 text-center">
+        <div class="text-2xl font-bold text-emerald-400">4</div>
+        <div class="text-[10px] text-neutral-500 font-label-caps mt-1">PROTOCOLES</div>
+    </div>
+    <div class="glass-card p-4 text-center">
+        <div class="text-2xl font-bold text-error">1</div>
+        <div class="text-[10px] text-neutral-500 font-label-caps mt-1">ALERTES</div>
+    </div>
+    <div class="glass-card p-4 text-center">
+        <div class="text-2xl font-bold text-secondary">12ms</div>
+        <div class="text-[10px] text-neutral-500 font-label-caps mt-1">LATENCE MOY.</div>
+    </div>
+</div>
+{% endblock %}
